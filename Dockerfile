@@ -1,4 +1,4 @@
-FROM node:8.6-alpine
+FROM node:8.6
 
 # First install dependencies
 COPY ./package.json ./app/

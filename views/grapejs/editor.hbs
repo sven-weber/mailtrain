@@ -208,6 +208,11 @@
 
     var editor = grapesjs.init(config);
 
+    var style = "<style>.span1Herr, .span1Frau{display:none;visibility:hidden;}.span2Herr{display:block !important;visibility:visible !important;}.span3Frau{display:block !important;visibility:visible !important;}</style>";
+
+    const head = editor.Canvas.getDocument().head;
+    head.insertAdjacentHTML('beforeend', style);
+
     $.getJSON('/editorapi/upload?type={{type}}&id={{resource.id}}&editor={{editor.name}}', function(data) {
         editor.AssetManager.add(data.files);
     });
@@ -223,7 +228,11 @@
         switch ('{{editor.mode}}') {
             case 'html':
                 html = editor.runCommand('gjs-get-inlined-html');
-                html = '<!doctype html><html><head><meta charset="utf-8"><title>{{resource.name}}</title></head><body>' + html + '</body></html>';
+                //Replace the Style classes to work properly
+                html = html.replace("span1-MERGE_ANREDE-", "span1[MERGE_ANREDE]"); 
+                html = html.replace("span2-MERGE_ANREDE-", "span2[MERGE_ANREDE]"); 
+                html = html.replace("span3-MERGE_ANREDE-", "span3[MERGE_ANREDE]"); 
+                html = '<!doctype html><html><head><meta charset="utf-8"><title>{{resource.name}}</title>' + style +'</head><body>' + html + '</body></html>';
                 break;
             case 'mjml':
                 var mjml = editor.runCommand('mjml-get-code');
